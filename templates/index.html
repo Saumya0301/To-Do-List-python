@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="motivation">
+        <p>
+            {% if day_of_week == 0 %}
+                "Start your week strong! Let’s make it happen! 💪"
+            {% elif day_of_week == 1 %}
+                "It’s Monday, time to chase those goals! 🚀"
+            {% elif day_of_week == 2 %}
+                "Tackle the challenges today, you’re unstoppable! 🌟"
+            {% elif day_of_week == 3 %}
+                "You’ve made it halfway through the week—keep going! 💥"
+            {% elif day_of_week == 4 %}
+                "Almost there! Let’s finish strong today! 🔥"
+            {% elif day_of_week == 5 %}
+                "It’s Friday! Let’s wrap up the week with pride! 🎉"
+            {% elif day_of_week == 6 %}
+                "Weekend vibes! Keep pushing those tasks, one step at a time! 🏆"
+            {% endif %}
+        </p>
+    </div>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <form action="/add" method="POST">
+            <input type="text" name="content" placeholder="Enter a new task" required>
+            <button type="submit">Add</button>
+        </form>
+        <ul>
+            {% for task in tasks %}
+                <li style="text-decoration: {% if task[2] %}line-through{% endif %};">
+                    <div class="task-content">
+                        {{ task[1] }}
+                        {% if not task[2] %}
+                            <form action="/done/{{ task[0] }}" method="POST" style="display:inline;">
+                                <button type="submit">✔️</button>
+                            </form>
+                        {% endif %}
+                        <a href="/delete/{{ task[0] }}">❌</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        const doneButtons = document.querySelectorAll('button[type="submit"]');
+        doneButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const audio = new Audio('https://www.soundjay.com/button/beep-07.wav');
+                audio.play();
+            });
+        });
+
+        const deleteLinks = document.querySelectorAll('a[href^="/delete"]');
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                const audio = new Audio('https://www.soundjay.com/button/beep-09.wav');
+                audio.play();
+            });
+        });
+    </script>
+</body>
+</html>
